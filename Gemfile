@@ -1,10 +1,11 @@
 source 'https://rubygems.org'
 
 gem 'rails', '3.2.13'
+gem 'pg', '0.12.2'
 
 group :development, :test do
-  gem 'sqlite3', '1.3.5'
   gem 'rspec-rails', '2.11.0'
+  gem 'guard-rspec', '1.2.1'
 end
 
 # Gems used only for assets and not required
@@ -19,8 +20,13 @@ gem 'jquery-rails', '2.0.2'
 
 group :test do
   gem 'capybara', '1.1.2'
+  gem 'rb-fchange', '0.0.5'
+  gem 'rb-notifu', '0.0.4'
+  gem 'win32console', '1.3.0'
+  require 'rbconfig'
+  gem 'wdm', '0.1.0' if RbConfig::CONFIG['target_os'] =~ /mswin|mingw/i  
+  gem 'guard-spork', '1.2.0'
+  gem 'childprocess', '0.3.9'
+  gem 'spork', '0.9.2'
 end
 
-group :production do
-  gem 'pg', '0.12.2'
-end
