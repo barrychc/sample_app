@@ -3,8 +3,10 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.13'
 gem 'bootstrap-sass', '2.1'
 gem 'bcrypt-ruby', '3.0.1'
+gem 'faker', '1.0.1' #9.3.2, make sample users with semi-realistic names and email addresses 
 gem 'pg', '0.12.2'
-
+gem 'will_paginate', '3.0.3' #9.3.3, one of the simplest and most robust pagination methods
+gem 'bootstrap-will_paginate', '0.0.6' #9.3.3, configures will_paginate to use Bootstrap’s pagination styles
 group :development, :test do
   gem 'rspec-rails', '2.11.0'
   gem 'guard-rspec', '1.2.1'
