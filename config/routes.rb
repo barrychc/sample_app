@@ -1,8 +1,20 @@
 SampleApp::Application.routes.draw do
 
-  resources :users
+  resources :users do
+    member do
+      get :following, :followers
+    end
+  end
+# Since both pages will be showing data, we use get to arrange for the URIs
+# to respond to GET requests  
+# and the member method means that the routes respond to URIs containing the user id.
+# The other possibility, collection, works without the id
+# Ref: http://guides.rubyonrails.org/routing.html
+    
   resources :sessions, only: [:new, :create, :destroy]
   resources :microposts, only: [:create, :destroy]
+  resources :relationships, only: [:create, :destroy]
+  
 #  get "users/new"
 
 #  get "static_pages/home"

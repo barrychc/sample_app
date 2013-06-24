@@ -29,9 +29,31 @@ describe User do
   
   it { should respond_to(:microposts) }
   it { should respond_to(:feed) } #:feed defined in app/models/user.rb
+  it { should respond_to(:relationships) }
+  it { should respond_to(:followed_users) }
+  it { should respond_to(:reverse_relationships) }
+  it { should respond_to(:following?) }
+  it { should respond_to(:follow!) }
+  it { should respond_to(:unfollow!) }
   
   it { should be_valid }
   it { should_not be_admin }
+=begin
+it { should respond_to(:name) }
+
+You're asserting that @attr.respond_to(:name) returns true, meaning that the
+method is present, not that it's returning a value. If you want to test that
+there's a value being returned, you could do something like:
+
+its(:name){ should be_present }
+That will make sure that the result of calling the name method returns a non-false,
+non-empty value. Then, when you reverse that test
+
+its(:name){ should_not be_present }
+You're asserting that the name method is returning blank. You'll have to create
+ a different setup for the second test, since you're testing an object in a 
+ different state.
+=end
 
   describe "with admin attribute set to 'true'" do
     before do
@@ -163,11 +185,46 @@ describe User do
       let(:unfollowed_post) do
         FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
       end
+      let(:followed_user) { FactoryGirl.create(:user) }
 
+      before do
+        @user.follow!(followed_user)
+        3.times { followed_user.microposts.create!(content: "Lorem ipsum") }
+      end
+      
       its(:feed) { should include(newer_micropost) }
       its(:feed) { should include(older_micropost) }
       its(:feed) { should_not include(unfollowed_post) }
       #include? method checks if an array includes the given element
+      its(:feed) do
+        followed_user.microposts.each do |micropost|
+          should include(micropost)
+        end
+      end
+    end
+  end
+  
+  describe "following" do
+    let(:other_user) { FactoryGirl.create(:user) }
+    before do
+      @user.save
+      @user.follow!(other_user)
+    end
+
+    it { should be_following(other_user) }
+    its(:followed_users) { should include(other_user) }
+    
+    describe "followed user" do
+      subject { other_user }
+      #the subject method, replacing @user with other_user
+      its(:followers) { should include(@user) }
+    end
+    
+    describe "and unfollowing" do
+      before { @user.unfollow!(other_user) }
+
+      it { should_not be_following(other_user) }
+      its(:followed_users) { should_not include(other_user) }
     end
   end
 end

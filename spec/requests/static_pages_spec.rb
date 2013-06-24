@@ -67,6 +67,19 @@ describe "Static pages" do
         it { should_not have_link('delete') }
       end      
 =end
+      describe "follower/following counts" do
+        let(:other_user) { FactoryGirl.create(:user) }
+        before do
+          other_user.follow!(user)
+          visit root_path
+        end
+
+        it { should have_link("0 following", href: following_user_path(user)) }
+        it { should have_link("1 followers", href: followers_user_path(user)) }
+#Here we have used the named routes shown in Table 11.1 to verify that the links
+# have the right addresses. Also note that in this case the word “followers”
+# is acting as a label, so we keep it plural even when there is only one follower.        
+      end
     end
   end
 

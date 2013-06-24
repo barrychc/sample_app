@@ -1,0 +1,21 @@
+<%= form_for(current_user.relationships.build(followed_id: @user.id),
+             remote: true) do |f| %>
+  <div><%= f.hidden_field :followed_id %></div>
+  <%= f.submit "Follow", class: "btn btn-large btn-primary" %>
+<% end %>
+<!-- 
+the follow form doesn’t have any content other than the button,
+ but it still needs to send the followed_id to the controller.
+  We accomplish this with the hidden_field method
+  e.g.
+  <input id="relationship_followed_id"
+name="followed_relationship[followed_id]"
+type="hidden" value="3" />	
+
+The “hidden” input tag puts the relevant information on the page
+ without displaying it in the browser.
+-->
+<!--
+", remote: true" allows web pages to send requests asynchronously to the server 
+without leaving the page by using ajax.
+-->
